@@ -36,20 +36,29 @@ Suggested milestones for incremental development:
 
 def extract_names(filename):
   """
-  Given a file name for baby.html, returns a list starting with the year string
-  followed by the name-rank strings in alphabetical order.
-  ['2006', 'Aaliyah 91', Aaron 57', 'Abagail 895', ' ...]
+  Given a file name for baby.html, returns a dictionary containing list 
+  starting with the year string followed by the name-rank strings in 
+  alphabetical order.
+  { "fname" : ['2006', 'Aaliyah 91', Aaron 57', 'Abagail 895', ...],
+    "mname" : ['2006', 'Aaron 34', 'Abdul 934', 'Abel 384', ...]}
   """
   # +++your code here+++
+  # Open and read file
   x = open(filename, "r")
-
   text = x.read()
+  # Find year and check existence
   year = re.search(r"Popularity in (\d+)", text).group(1)
+  if not year:
+    # We didn't find a year, so we'll exit with an error message.
+    sys.stderr.write('Couldn\'t find the year!\n')
+    sys.exit(1)
+  # Find names and rank. Also classify names as of males or females
   rank_name = re.findall(r"<tr align=\"right\"><td>(\d+)</td><td>(\w+)</td><td>(\w+)</td>", text)
   mname, fname = [year], [year]
   for tupple in rank_name:
     mname.append(tupple[1]+" "+tupple[0])
     fname.append(tupple[2]+" "+tupple[0])
+  # Sort names alphabetically
   mname.sort()
   fname.sort()
   return {"mname": mname, "fname": fname}
@@ -78,7 +87,7 @@ def main():
   
   for arg in args:
     names = extract_names(arg)
-
+    # If requested create text files.(Seperate files is a bonus to question)
     if summary:
       mf = open(arg+"_male.summary","w")
       ff = open(arg+"_female.summary","w")
