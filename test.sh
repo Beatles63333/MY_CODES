@@ -43,7 +43,7 @@ eval ${CMD_TO_EXECUTE} | while read var; do
     CONSUMED_SPACE="0"
   else
     SIZE=$(echo "${var}" | tr -s " " | rev | cut -d " " -f2,3 | rev)
-    CONSUMED_SPACE=$(echo "${var}" | tr " " | rev | cut -d " " -f4,5 | rev)
+    CONSUMED_SPACE=$(echo "${var}" | tr -s " " | rev | cut -d " " -f4,5 | rev)
   fi
   env printf "%-30s\t%-15s\t%-50s\t%-10s\t%s\n" "$(date)" "${WAREHOUSE}" "${DB_NAME}" "${SIZE}" "${CONSUMED_SPACE}" >> "${OUTPUT_PATH}/${OUTPUT_FILE}"
 done
